@@ -1,12 +1,32 @@
 import { CirclePlus, CircleX } from "lucide-react";
 import PrimaryButton from "../buttons/PrimaryButton";
 import { motion } from "motion/react";
+import { taskSchema, Task } from "@/schemas/task.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 export default function CreateTaskModal({
   closeModal,
+  createNote,
 }: {
   closeModal: () => void;
+  createNote: (
+    task: Omit<Task, "id" | "created_at" | "completed">
+  ) => Promise<void>;
 }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Task>({
+    resolver: zodResolver(taskSchema),
+  });
+
+  const onSubmit = async (data: Task) => {
+    await createNote(data);
+    closeModal();
+  };
+
   return (
     <>
       <motion.div
@@ -23,22 +43,39 @@ export default function CreateTaskModal({
         />
         <h2 className="text-3xl font-bold mb-1">Crea una nueva tarea</h2>
 
-        <form className="flex flex-col gap-5 group">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-5 group"
+        >
           <div
             className="w-1/5 h-1 bg-light-blue rounded-full group-focus-within:w-1/4 
           transition-all duration-500"
           ></div>
-          <input
-            type="text"
-            placeholder="Título"
-            className="border border-light-gray rounded-lg py-2 px-4 w-full focus:outline-none
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              placeholder="Título"
+              {...register("title")}
+              className="border border-light-gray rounded-lg py-2 px-4 w-full focus:outline-none
+              focus:ring-1 focus:ring-light-blue focus:border-light-blue transition-all duration-300"
+            />
+            {errors.title && (
+              <p className="text-medium-red text-sm">{errors.title.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <textarea
+              placeholder="Descripción"
+              {...register("description")}
+              className="border border-light-gray rounded-lg py-2 px-4 w-full h-40 resize-none focus:outline-none
             focus:ring-1 focus:ring-light-blue focus:border-light-blue transition-all duration-300"
-          />
-          <textarea
-            placeholder="Descripción"
-            className="border border-light-gray rounded-lg py-2 px-4 w-full h-40 resize-none focus:outline-none
-            focus:ring-1 focus:ring-light-blue focus:border-light-blue transition-all duration-300"
-          />
+            />
+            {errors.description && (
+              <p className="text-medium-red text-sm">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
           <PrimaryButton
             type="submit"
             text="Añadir"
