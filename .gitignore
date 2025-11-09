@@ -24,6 +24,7 @@ build
 # misc
 .DS_Store
 *.pem
+**/database.db
 
 # debug
 npm-debug.log*

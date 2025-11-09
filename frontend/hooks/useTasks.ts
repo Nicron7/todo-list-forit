@@ -58,14 +58,14 @@ export default function useTasks() {
   );
 
   const updateTask = useCallback(
-    async (id: number, updateData: Partial<Task>) => {
+    async (id: number, title: string, description: string) => {
       try {
         const res = await fetch(`${API_URL}/tasks/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updateData),
+          body: JSON.stringify({ title, description }),
         });
         if (!res.ok) {
           throw new Error("Failed to update task");
@@ -85,7 +85,7 @@ export default function useTasks() {
   const switchCompleteTask = useCallback(
     async (id: number, completed: boolean) => {
       try {
-        const res = await fetch(`${API_URL}/tasks/${id}`, {
+        const res = await fetch(`${API_URL}/tasks/${id}/complete`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
