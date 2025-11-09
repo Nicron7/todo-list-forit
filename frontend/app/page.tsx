@@ -1,20 +1,30 @@
+"use client";
+
+import PrimaryButton from "@/components/buttons/PrimaryButton";
 import TaskCard from "@/components/cards/TaskCard";
+import CreateTaskModal from "@/components/modals/CreateTaskModal";
 import { CirclePlus } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 
 const tasks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <div className="flex flex-col min-h-screen items-center justify-center">
       <main className="w-[95%] flex flex-col items-center py-15 max-w-[1400px]">
         <h1 className="text-4xl font-bold mb-3">Lista de Tareas</h1>
-        <button
-          className="flex items-center gap-2 bg-light-blue/40 hover:bg-light-blue/70 text-dark-blue
-         transition-all duration-300 cursor-pointer py-2 px-4 rounded-lg mb-5"
-        >
-          <CirclePlus size={16} />
-          Crear tarea
-        </button>
+        <div className="mb-5">
+          <PrimaryButton
+            action={handleModalOpen}
+            text="Crear Tarea"
+            icon={<CirclePlus size={20} />}
+          />
+        </div>
         <div className="w-full custom-grid">
           {tasks.map((task) => (
             <TaskCard
@@ -26,6 +36,9 @@ export default function Home() {
           ))}
         </div>
       </main>
+      <AnimatePresence>
+        {isModalOpen && <CreateTaskModal closeModal={handleModalOpen} />}
+      </AnimatePresence>
     </div>
   );
 }
