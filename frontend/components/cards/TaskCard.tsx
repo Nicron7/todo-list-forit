@@ -16,9 +16,19 @@ interface TaskCardProps {
   date: string;
   title: string;
   description: string;
+  id: number;
+  completed: boolean;
+  deleteTask: (id: number) => void;
 }
 
-export default function TaskCard({ date, title, description }: TaskCardProps) {
+export default function TaskCard({
+  date,
+  title,
+  description,
+  id,
+  completed,
+  deleteTask,
+}: TaskCardProps) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const handleCompleted = () => {
@@ -26,6 +36,10 @@ export default function TaskCard({ date, title, description }: TaskCardProps) {
   };
   const handleDropdownOpen = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+  const handleDeleteTask = () => {
+    deleteTask(id);
+    setDropdownOpen(false);
   };
   const baseStyles =
     "flex items-center gap-2 py-2 px-4 w-full transition-all duration-300";
@@ -52,7 +66,10 @@ export default function TaskCard({ date, title, description }: TaskCardProps) {
                 </button>
               </li>
               <li>
-                <button className="py-1 pl-3 flex mx-auto rounded-lg items-center gap-1 w-full max-w-31 hover:bg-medium-red/20 transition-colors">
+                <button
+                  onClick={handleDeleteTask}
+                  className="py-1 pl-3 flex mx-auto rounded-lg items-center gap-1 w-full max-w-31 hover:bg-medium-red/20 transition-colors"
+                >
                   <Trash2 size={15} />
                   Eliminar
                 </button>
@@ -76,7 +93,7 @@ export default function TaskCard({ date, title, description }: TaskCardProps) {
         </div>
 
         <h3 className="text-xl font-medium mb-2 line-clamp-2">{title}</h3>
-        <p className="mb-4 line-clamp-4">{description}</p>
+        <p className="mb-4 line-clamp-4 text-dark-gray">{description}</p>
         <div className="flex items-center text-sm w-full font-medium">
           <span
             onClick={handleCompleted}
