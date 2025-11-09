@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --background: oklch(88.915% 0.00107 11.966);
+  --foreground: oklch(23.075% 0.00003 271.152);
+  --card-background: oklch(92.346% 0.00214 14.495);
+
+  --dark-blue: oklch(0.3383 0.0595 183.71);
+  --medium-blue: oklch(0.6024 0.0595 183.71);
+  --light-blue: oklch(0.7656 0.0595 183.71);
+
+  --medium-red: oklch(0.4837 0.1297 32.29);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card-background: var(--card-background);
+  --color-foreground: var(--foreground);
+
+  --color-dark-blue: var(--dark-blue);
+  --color-medium-blue: var(--medium-blue);
+  --color-light-blue: var(--light-blue);
+
+  --color-medium-red: var(--medium-red);
+}
+/* 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+.custom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
