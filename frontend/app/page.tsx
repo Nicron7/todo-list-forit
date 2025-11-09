@@ -10,7 +10,14 @@ import { formatDate } from "@/utils/dateFormatter";
 import useTasks from "@/hooks/useTasks";
 
 export default function Home() {
-  const { tasks, loading, createNote, deleteTask } = useTasks();
+  const {
+    tasks,
+    loading,
+    createNote,
+    deleteTask,
+    updateTask,
+    switchCompleteTask,
+  } = useTasks();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(!isModalOpen);
@@ -41,7 +48,7 @@ export default function Home() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="w-full text-center h-70 bg-light-blue/25 flex flex-col items-center justify-center 
+            className="w-full text-center h-100 bg-light-blue/70 flex flex-col items-center justify-center 
           rounded-lg"
           >
             <PackageOpen size={110} />
@@ -68,6 +75,8 @@ export default function Home() {
                   id={task.id}
                   completed={task.completed}
                   deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  switchCompleteTask={switchCompleteTask}
                 />
               </motion.div>
             ))}
