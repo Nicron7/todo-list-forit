@@ -3,13 +3,14 @@
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import TaskCard from "@/components/cards/TaskCard";
 import CreateTaskModal from "@/components/modals/CreateTaskModal";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, PackageOpen, LoaderCircle } from "lucide-react";
 import { useState } from "react";
-import { AnimatePresence } from "motion/react";
-
-const tasks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+import { AnimatePresence, motion } from "motion/react";
+import { formatDate } from "@/utils/dateFormatter";
+import useTasks from "@/hooks/useTasks";
 
 export default function Home() {
+  const { tasks, loading, createNote, deleteTask } = useTasks();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(!isModalOpen);
@@ -25,19 +26,61 @@ export default function Home() {
             icon={<CirclePlus size={20} />}
           />
         </div>
-        <div className="w-full custom-grid">
-          {tasks.map((task) => (
-            <TaskCard
-              key={task}
-              date="2023-01-01"
-              title={`Tarea ${task}`}
-              description={`Descripción de la tarea ${task} lorem ipsum dolor sit amet.`}
+
+        {loading && (
+          <div className="w-full flex flex-col items-center justify-center h-50">
+            <LoaderCircle
+              size={60}
+              className="animate-spin text-light-blue"
             />
-          ))}
-        </div>
+          </div>
+        )}
+
+        {tasks.length === 0 && !loading && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="w-full text-center h-70 bg-light-blue/25 flex flex-col items-center justify-center 
+          rounded-lg"
+          >
+            <PackageOpen size={110} />
+            <h2 className="text-2xl font-bold">
+              Aún no tienes tareas agregadas
+            </h2>
+            <p className="text-dark-gray">Crea una nueva tarea para comenzar</p>
+          </motion.div>
+        )}
+        <motion.div className="w-full custom-grid">
+          <AnimatePresence mode="popLayout">
+            {tasks.map((task) => (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                layout
+                key={task.id}
+              >
+                <TaskCard
+                  date={formatDate(task.created_at)}
+                  title={task.title}
+                  description={task.description}
+                  id={task.id}
+                  completed={task.completed}
+                  deleteTask={deleteTask}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </main>
       <AnimatePresence>
-        {isModalOpen && <CreateTaskModal closeModal={handleModalOpen} />}
+        {isModalOpen && (
+          <CreateTaskModal
+            closeModal={handleModalOpen}
+            createNote={createNote}
+          />
+        )}
       </AnimatePresence>
     </div>
   );
