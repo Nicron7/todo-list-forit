@@ -35,7 +35,10 @@ router.post("/", validate(noteSchema), async (req, res) => {
         "INSERT INTO notes (title, description, completed) VALUES (?, ?, ?)"
       )
       .run(title, description, 0);
-    res.status(201).json(result);
+    const newNote = db
+      .prepare("SELECT * FROM notes WHERE id = ?")
+      .get(result.lastInsertRowid);
+    res.status(201).json(newNote);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
