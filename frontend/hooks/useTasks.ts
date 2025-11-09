@@ -5,23 +5,25 @@ export interface Task {
   title: string;
   description: string;
   completed: boolean;
-  createdAt: string;
+  created_at: string;
 }
 
 export default function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const API_URL = "http://localhost:3010";
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/tasks");
+      const res = await fetch(`${API_URL}/tasks`);
       if (!res.ok) {
         throw new Error("Failed to fetch tasks");
       }
       const data = await res.json();
+      console.log(data);
       setTasks(data);
     } catch (error) {
       console.error(error);
@@ -31,30 +33,34 @@ export default function useTasks() {
     }
   }, []);
 
-  const createNote = useCallback(async (task: Omit<Task, "id">) => {
-    try {
-      const res = await fetch("/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
-      if (!res.ok) {
-        throw new Error("Failed to create task");
+  const createNote = useCallback(
+    async (task: Omit<Task, "id" | "created_at" | "completed">) => {
+      try {
+        const res = await fetch(`${API_URL}/tasks`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(task),
+        });
+        if (!res.ok) {
+          throw new Error("Failed to create task");
+        }
+        const data = await res.json();
+        console.log("Nueva tarea creada:", data);
+        setTasks((prevTasks) => [...prevTasks, data]);
+      } catch (error) {
+        console.error(error);
+        setError("Error creating task:" + error);
       }
-      const data = await res.json();
-      setTasks((prevTasks) => [...prevTasks, data]);
-    } catch (error) {
-      console.error(error);
-      setError("Error creating task:" + error);
-    }
-  }, []);
+    },
+    []
+  );
 
   const updateTask = useCallback(
     async (id: number, updateData: Partial<Task>) => {
       try {
-        const res = await fetch(`/api/tasks/${id}`, {
+        const res = await fetch(`${API_URL}/tasks/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -79,7 +85,7 @@ export default function useTasks() {
   const switchCompleteTask = useCallback(
     async (id: number, completed: boolean) => {
       try {
-        const res = await fetch(`/api/tasks/${id}`, {
+        const res = await fetch(`${API_URL}/tasks/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -103,7 +109,7 @@ export default function useTasks() {
 
   const deleteTask = useCallback(async (id: number) => {
     try {
-      const res = await fetch(`/api/tasks/${id}`, {
+      const res = await fetch(`${API_URL}/tasks/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) {
