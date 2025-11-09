@@ -11,6 +11,7 @@
 
   --medium-red: oklch(0.4837 0.1297 32.29);
 
+  --dark-gray: oklch(45.678% 0.00005 271.152);
   --light-gray: oklch(0.7448 0 32.32);
 }
 
@@ -25,15 +26,9 @@
 
   --color-medium-red: var(--medium-red);
 
+  --color-dark-gray: var(--dark-gray);
   --color-light-gray: var(--light-gray);
 }
-/* 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 
 .custom-grid {
   display: grid;
