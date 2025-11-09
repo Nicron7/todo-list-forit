@@ -10,6 +10,8 @@
   --light-blue: oklch(0.7656 0.0595 183.71);
 
   --medium-red: oklch(0.4837 0.1297 32.29);
+
+  --light-gray: oklch(0.7448 0 32.32);
 }
 
 @theme inline {
@@ -22,6 +24,8 @@
   --color-light-blue: var(--light-blue);
 
   --color-medium-red: var(--medium-red);
+
+  --color-light-gray: var(--light-gray);
 }
 /* 
 @media (prefers-color-scheme: dark) {
