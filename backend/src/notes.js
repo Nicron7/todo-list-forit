@@ -5,10 +5,17 @@ import db from "./sqlite.js";
 
 const router = express.Router();
 
+function formatNote(note) {
+  return {
+    ...note,
+    completed: Boolean(note.completed),
+  };
+}
+
 router.get("/", (req, res) => {
   try {
     const notes = db.prepare("SELECT * FROM notes").all();
-    res.json(notes);
+    res.json(notes.map(formatNote));
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -21,7 +28,7 @@ router.get("/:id", async (req, res) => {
     if (!note) {
       return res.status(404).json({ error: "Note not found" });
     }
-    res.json(note);
+    res.json(formatNote(note));
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -38,7 +45,7 @@ router.post("/", validate(noteSchema), async (req, res) => {
     const newNote = db
       .prepare("SELECT * FROM notes WHERE id = ?")
       .get(result.lastInsertRowid);
-    res.status(201).json(newNote);
+    res.status(201).json(formatNote(newNote));
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -52,10 +59,13 @@ router.put("/:id", validate(noteSchema), async (req, res) => {
     if (!note) {
       return res.status(404).json({ error: "Note not found" });
     }
-    const result = db
-      .prepare("UPDATE notes SET title = ?, description = ? WHERE id = ?")
-      .run(title, description, note.id);
-    res.json(result);
+    db.prepare("UPDATE notes SET title = ?, description = ? WHERE id = ?").run(
+      title,
+      description,
+      note.id
+    );
+    const updatedNote = db.prepare("SELECT * FROM notes WHERE id = ?").get(id);
+    res.json(formatNote(updatedNote));
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -73,7 +83,8 @@ router.put("/:id/complete", async (req, res) => {
       newValue,
       note.id
     );
-    res.sendStatus(204);
+    const updatedNote = db.prepare("SELECT * FROM notes WHERE id = ?").get(id);
+    res.json(formatNote(updatedNote));
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -87,7 +98,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Note not found" });
     }
     db.prepare("DELETE FROM notes WHERE id = ?").run(note.id);
-    res.status(204).json({ message: "Note deleted" });
+    res.status(200).json({ message: "Note deleted", id: Number(id) });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
