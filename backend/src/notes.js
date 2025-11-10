@@ -21,6 +21,24 @@ router.get("/", (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  const { query } = req.query;
+  try {
+    if (!query || query.trim() === "") {
+      const notes = db
+        .prepare("SELECT * FROM notes ORDER BY created_at DESC")
+        .all();
+      return res.json(notes.map(formatNote));
+    }
+    const notes = db
+      .prepare("SELECT * FROM notes WHERE title LIKE ?")
+      .all(`%${query}%`);
+    res.json(notes.map(formatNote));
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
