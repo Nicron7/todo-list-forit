@@ -147,12 +147,17 @@ export default function useTasks() {
     fetchTasks();
   }, [fetchTasks]);
 
+  const completedTasks = tasks.filter((task) => task.completed);
+  const pendingTasks = tasks.filter((task) => !task.completed);
+
   return {
     tasks,
     loading,
     error,
     createNote,
     updateTask,
+    completedTasks,
+    pendingTasks,
     deleteTask,
     switchCompleteTask,
     searchTasks,
