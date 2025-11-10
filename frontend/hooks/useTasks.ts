@@ -33,6 +33,27 @@ export default function useTasks() {
     }
   }, []);
 
+  const searchTasks = useCallback(async (query: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `${API_URL}/tasks/search?query=${encodeURIComponent(query)}`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+      const data = await res.json();
+      console.log(data);
+      setTasks(data);
+    } catch (error) {
+      console.error(error);
+      setError("Error fetching tasks:" + error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const createNote = useCallback(
     async (task: Omit<Task, "id" | "created_at" | "completed">) => {
       try {
@@ -134,5 +155,6 @@ export default function useTasks() {
     updateTask,
     deleteTask,
     switchCompleteTask,
+    searchTasks,
   };
 }
