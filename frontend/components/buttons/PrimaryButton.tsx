@@ -18,7 +18,7 @@ export default function PrimaryButton({
       onClick={action}
       type={type}
       className={`${
-        full ? "w-full" : "w-fit"
+        full ? "w-full" : "w-full max-w-100 sm:w-fit"
       } flex items-center gap-2 bg-light-blue/70 hover:bg-light-blue text-dark-blue
          transition-all duration-300 cursor-pointer py-2 px-4 rounded-lg font-medium`}
     >

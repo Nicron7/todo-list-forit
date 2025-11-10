@@ -50,7 +50,7 @@ export default function CustomSelect({
     options.find((opt) => opt.value === value)?.label || placeholder;
 
   return (
-    <div className={`relative w-50 ${className}`}>
+    <div className={`relative w-full max-w-100 sm:w-50 ${className}`}>
       <button
         type="button"
         ref={buttonRef}

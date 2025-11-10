@@ -138,7 +138,7 @@ export default function TaskCard({
           onLayoutAnimationComplete={() => setIsAnimating(false)}
           className={`${
             isAnimating ? "z-200" : ""
-          } relative h-full bg-card-background max-w-120 p-6 rounded-lg shadow-md overflow-hidden`}
+          } mx-auto relative h-full bg-card-background max-w-120 p-6 rounded-lg shadow-md overflow-hidden`}
         >
           <AnimatePresence>
             {dropdownOpen && (

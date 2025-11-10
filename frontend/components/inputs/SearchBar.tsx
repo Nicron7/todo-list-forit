@@ -15,7 +15,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   return (
     <div
-      className="relative w-full sm:w-80 focus-within:ring-1 focus-within:ring-light-blue py-2 px-4 pr-10
+      className="relative w-full max-w-100 sm:w-80 focus-within:ring-1 focus-within:ring-light-blue py-2 px-4 pr-10
            rounded-lg border border-light-gray focus-within:border-light-blue transition-all duration-300"
     >
       <input
