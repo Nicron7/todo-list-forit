@@ -84,8 +84,10 @@ export default function Home() {
         </div>
       </header>
       <main className="w-[95%] flex flex-col items-center py-15 max-w-[1400px]">
-        <h1 className="text-4xl font-bold text-center">Lista de Tareas</h1>
-        <p className="mb-5 text-dark-gray text-lg text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center">
+          Lista de Tareas
+        </h1>
+        <p className="mb-5 text-dark-gray text-base sm:text-lg text-center">
           Crea y administra tus tareas de forma fácil y eficiente
         </p>
         <div className="flex sm:flex-row flex-col items-center justify-center gap-5 mb-10 w-full">
@@ -159,7 +161,7 @@ export default function Home() {
             )}
           </motion.div>
         )}
-        <motion.div className="w-full custom-grid">
+        <motion.div className="w-full custom-grid justify-center">
           <AnimatePresence mode="popLayout">
             {!loading &&
               filteredTasks.map((task) => (
